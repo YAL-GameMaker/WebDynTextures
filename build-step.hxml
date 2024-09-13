@@ -1,0 +1,3 @@
+--neko wdt2024/extensions/web_dyn_tex/post_build_step.n
+--class-path src/
+--main PostBuildStep

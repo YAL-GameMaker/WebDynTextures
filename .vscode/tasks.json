@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build GMS1",
+			"group": { "kind": "build", "isDefault": true },
+			"command": "haxe",
+			"args": ["build-14.hxml"],
+			"problemMatcher": ["$haxe"]
+		},
+		{
+			"label": "Build GM2024",
+			"group": { "kind": "build", "isDefault": true },
+			"command": "haxe",
+			"args": ["build-2024.hxml"],
+			"problemMatcher": ["$haxe"]
+		},
+		{
+			"label": "Build Step",
+			"group": { "kind": "build", "isDefault": true },
+			"command": "haxe",
+			"args": ["build-step.hxml"],
+			"problemMatcher": ["$haxe"]
+		}
+	]
+}
