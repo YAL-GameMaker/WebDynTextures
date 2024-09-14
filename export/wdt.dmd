@@ -1,0 +1,120 @@
+```set template default.html```
+```set title Web Dynamic Textures cheat sheet```
+```gmlapi fnames2```
+```set autoapi ext```
+```set tag:defcode gml```
+```set navmenu 1```
+```setmd intro
+This is a "cheat sheet" for the "Web Dynamic Textures" extension by YellowAfterlife.
+
+The extension can be found on [itch.io](https://yellowafterlife.itch.io/gamemaker-web-dyn-textures).
+
+The source code can be found on [GitHub](https://github.com/YAL-GameMaker/WebDynTextures).
+```
+#[Getting started]() {
+	##{
+	-	Install [Neko VM](https://nekovm.org/download/) so that it's in your PATH.
+	-	Install [ImageMagick](https://imagemagick.org/) so that it's in your PATH.
+	-	Import the extension by dragging YYMPS onto your workspace
+		or picking menu:Tools➜Import Local Asset Package.
+	-	Set up your desired fallback texture type in the extension properties.
+		
+		Transparent and Solid Color reduce the texture page sizes the most,
+		but produce illegible textures when not loaded.
+		
+		Silhouette produces a single-color texture with transparency
+		(encoded as a lossy WEBP), which usually takes up 3-10% of original size,
+		depending on shape complexity
+		
+		Lossy WEBP, is, hence the name, texture re-encoded into WEBP format.\
+		These are slightly larger than Silhouette, but produce a fairly
+		legible image when not loaded, making them a great choice for loading
+		textures in background.
+	-	[Load textures](wdt_load) when you need them!
+		
+		You can use [status functions](wdt_status) to check on the progress.
+	}
+}
+#[General functions]() {
+	#[wdt_async_image()]() {
+		You should call this in Async - Image event of some persistent object.
+		
+		Otherwise the texture pages will not be replaced upon loading.
+	}
+}
+#[Loading](wdt_load) {
+	All of these start loading the respective texture page if it hasn't been loaded yet.
+	
+	There's no harm calling them for something that's already loading/loaded.
+	#[wdt_load_sprite(sprite, ?subimg)->]() {
+		Loads a texture page that contains the given subimage of the given sprite.
+		
+		If `subimg` is omitted, applies to every subimage in the sprite.
+	}
+	#[wdt_load_sprites(...sprites)->]() {
+		Like above, but can be passed any number of sprites.
+	}
+	#[wdt_load_font(font)->]() {
+		Loads a texture page that contains the atlas for the given font.
+	}
+	#[wdt_load_tileset(font)->]() {
+		Loads a texture page that contains the atlas for the given tileset.
+	}
+	#[wdt_load_texture_group(texture_group_name)->]() {
+		Loads all texture pages from a texture group!
+	}
+	#[wdt_load_texture(texture)->]() {
+		Loads a texture page associated with the given texture page entry
+		(such as from `sprite_get_texture`).
+	}
+}
+#[Status](wdt_status) {
+	#[Status codes] {
+		#[wdt_status_ready = 1]() {
+			This is `1` so that you can do `if (status)` to see if a thing is ready to use.
+		}
+		#[wdt_status_loading = 0]() {
+			Currently loading the original texture page!
+		}
+		#[wdt_status_fallback = -1]() {
+			The original texture page has not been requested yet,
+			we're using the fallback texture.
+		}
+		#[wdt_status_error = -2]() {
+			The original texture page failed to load (e.g. due to network error)
+		}
+	}
+	#[wdt_get_status_name(status)->]() {
+		Returns the name ("ready", etc.) for the given status code.
+	}
+	For things that may be spread across multiple texture pages
+	(such as sprites or texture groups),
+	the functions return the "worst" state (error > fallback > loading > ready)
+	for an easier estimation of whether the thing is good to use.
+	#[wdt_get_sprite_status(sprite, ?subimg)->]() {
+		Returns the texture status for a sprite.
+		
+		If subimg is omitted, checks all of the frames.
+	}
+	#[wdt_get_font_status(font)->]() {
+		Returns the texture status for a font.
+	}
+	#[wdt_get_tileset_status(tileset)->]() {
+		Returns the texture status for a tileset.
+	}
+	#[wdt_get_texture_group_status(texture_group_name)->]() {
+		Returns the texture status for contents of a texture group.
+	}
+	#[wdt_get_texture_status(texture)->]() {
+		Returns the texture status for a texture page entry directly.
+	}
+}
+#[Other functions](wdt_misc) {
+	GameMaker IDE (still?) can't hide functions in extensions,
+	so you might as well know what's up
+	#[wdt_get_sprite_texture_number(sprite)->]() {
+		Returns the number of _texture frames_ for a sprite - that is,
+		1 for Spine sprites (instead of 2147483647)
+		and 0 for SWF sprites.
+	}
+}

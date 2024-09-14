@@ -19,18 +19,20 @@ function wdt_get_image_field(tx) {
 	tx.__wdt_image_field = null;
 	return null;
 }
-///~
+/// ->wdt_image
 function wdt_get_image(tx) {
 	var fd = wdt_get_image_field(tx);
 	return fd ? tx[fd] : null;
 }
-///~
+/// ->string
 function wdt_get_image_path(tx) {
 	var img = wdt_get_image(tx);
 	return img ? img.src : "";
 }
 ///~
 function wdt_assign(tx, ntx) {
+	// here we replace references to the <img> element within sub-objects
+	// of the texture page entry (except inside the <img> itself)
 	var cur_image = wdt_get_image(tx);
 	if (cur_image == null) return 0;
 	
@@ -64,6 +66,9 @@ var wdt_raw_textures = null;
 ///~
 function wdt_assign_raw(tx, ntx) {
 	if (!wdt_raw_textures) return;
+	// Some bits (like Spine attachments) reference not the texture object,
+	// but an index in the g_Textures array.
+	// This function replaces references in that array.
 	var img = wdt_get_image(tx);
 	var nimg = wdt_get_image(ntx);
 	for (var i = 0; i < wdt_raw_textures.length; i++) {
@@ -73,6 +78,8 @@ function wdt_assign_raw(tx, ntx) {
 
 ///~
 function wdt_preinit_raw() {
+	// and this function finds the array for the above function by
+	// parsing (potentially minified) JS implementations of functions.
 	try {
 		var ref_code = window.gml_Script_gmcallback_wdt_preinit.toString();
 		var ref_rx = /"draw_texture_flush"\s*,\s*(\w+)/;

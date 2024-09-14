@@ -1,0 +1,9 @@
+{
+    "linterPrefs":{
+        "specTypeVar":true
+    },
+    "rawDirectories":[
+        ".",
+        "..\/export\/wdt.dmd"
+    ]
+}

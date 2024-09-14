@@ -53,7 +53,9 @@ class PostBuildStep {
 			if (rel == defTexture) continue;
 			
 			var full = html5game + "/" + rel;
-			File.copy(full, Path.withExtension(full, "orig.png"));
+			var szOrig = FileSystem.stat(full).size;
+			var orig = Path.withExtension(full, "orig.png");
+			File.copy(full, orig);
 			
 			switch (fallback_mode) {
 				case "Solid color": {
@@ -102,8 +104,17 @@ class PostBuildStep {
 					Sys.println('[wdt] Unknown mode "$fallback_mode"!');
 					break;
 				}
-				Sys.println('[wdt] Replaced $rel');
+			} // switch
+			inline function printSize(sz) {
+				var kb = sz / 1024;
+				var unit = "KB";
+				return Math.floor(kb * 100) / 100 + " KB";
 			}
-		}
+			var szFB = FileSystem.stat(full).size;
+			var szPerc = Math.floor(szFB / szOrig * 1000) / 10 + "%";
+			Sys.println('[wdt] Replaced $rel, '
+				+ '${printSize(szOrig)} -> ${printSize(szFB)}'
+				+ ' ($szPerc of original)');
+		} // for
 	}
 }

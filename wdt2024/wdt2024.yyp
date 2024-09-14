@@ -43,6 +43,8 @@
     {"id":{"name":"spr_bee","path":"sprites/spr_bee/spr_bee.yy",},},
     {"id":{"name":"spr_orbital","path":"sprites/spr_orbital/spr_orbital.yy",},},
     {"id":{"name":"spr_thinking","path":"sprites/spr_thinking/spr_thinking.yy",},},
+    {"id":{"name":"spr_tiles","path":"sprites/spr_tiles/spr_tiles.yy",},},
+    {"id":{"name":"ts_tiles","path":"tilesets/ts_tiles/ts_tiles.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
