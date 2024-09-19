@@ -65,6 +65,10 @@
             2,
             2,
           ],"documentation":"","externalName":"wdt_assign","help":"","hidden":true,"kind":11,"returnType":2,},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"wdt_autoload_enable","argCount":-1,"args":[],"documentation":"","externalName":"wdt_autoload_enable","help":"wdt_autoload_enable(?enable)","hidden":false,"kind":5,"returnType":2,},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"wdt_autoload_texture","argCount":1,"args":[
+            2,
+          ],"documentation":"","externalName":"wdt_autoload_texture","help":"wdt_autoload_texture(texture)","hidden":false,"kind":5,"returnType":2,},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"wdt_assign_raw","argCount":2,"args":[
             2,
             2,
@@ -88,6 +92,9 @@
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"wdt_load_texture","argCount":1,"args":[
             2,
           ],"documentation":"","externalName":"wdt_load_texture","help":"wdt_load_texture(texture)->","hidden":false,"kind":2,"returnType":2,},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"gmcallback_wdt_load_texture","argCount":1,"args":[
+            2,
+          ],"documentation":"","externalName":"gmcallback_wdt_load_texture","help":"","hidden":true,"kind":11,"returnType":2,},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"wdt_get_texture_status","argCount":1,"args":[
             2,
           ],"documentation":"","externalName":"wdt_get_texture_status","help":"wdt_get_texture_status(texture)->","hidden":false,"kind":2,"returnType":2,},
@@ -95,6 +102,7 @@
             2,
             2,
           ],"documentation":"","externalName":"wdt_assign_all","help":"","hidden":true,"kind":11,"returnType":2,},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"wdt_autoload_textures","argCount":0,"args":[],"documentation":"","externalName":"wdt_autoload_textures","help":"wdt_autoload_textures()","hidden":false,"kind":2,"returnType":2,},
       ],"init":"wdt_preinit","kind":2,"order":[],"origname":"","ProxyFiles":[],"uncompress":false,"usesRunnerInterface":false,},
     {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"","constants":[],"copyToTargets":-1,"filename":"wdt_assets.gml","final":"","functions":[
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"wdt_load_sprite","argCount":-1,"args":[],"documentation":"","externalName":"wdt_load_sprite","help":"wdt_load_sprite(sprite, ?subimg)->","hidden":false,"kind":2,"returnType":2,},

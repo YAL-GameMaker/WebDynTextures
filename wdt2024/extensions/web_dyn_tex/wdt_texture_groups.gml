@@ -35,6 +35,7 @@ var _name = argument0;
 var _pairs = global.__wdt_texture_group_image_pairs[?_name];
 if (_pairs != undefined) return _pairs;
 _pairs = [];
+var _autoload = wdt_autoload_enable(false);
 
 var _found = global.__wdt_texture_group_temp;
 var _pair/*:[string,texture]*/;
@@ -81,4 +82,5 @@ for (var i = 0, n = array_length(_tilesets); i < n; i++) {
 
 ds_map_clear(_found);
 global.__wdt_texture_group_image_pairs[?_name] = _pairs;
+wdt_autoload_enable(_autoload);
 return _pairs;

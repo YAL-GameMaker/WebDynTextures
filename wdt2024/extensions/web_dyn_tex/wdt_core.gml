@@ -35,7 +35,11 @@ global.__wdt_texture_group_temp = ds_map_create(); /// @is {ds_map<string, bool>
 //#macro wdt_status_fallback -1
 //#macro wdt_status_error -2
 wdt_preinit_raw();
-if (wdt_magic_false()) gmcallback_wdt_preinit();
+if (wdt_magic_false()) {
+	gmcallback_wdt_preinit();
+	gmcallback_wdt_async_image(undefined, undefined, -1);
+	gmcallback_wdt_load_texture(undefined);
+}
 
 #define gmcallback_wdt_preinit
 wdt_magic_false("draw_texture_flush", draw_texture_flush());
@@ -91,7 +95,9 @@ wdt_assign_all(_texture, _new_texture);
 if (global.__wdt_native) return false;
 var _texture = argument0;
 
+var _autoload = wdt_autoload_enable(false);
 var _path = wdt_get_image_path(_texture);
+wdt_autoload_enable(_autoload);
 
 // uh oh?
 if (_path == undefined) return false;
@@ -113,19 +119,27 @@ global.__wdt_status[?_path] = 0;
 
 return true;
 
+#define gmcallback_wdt_load_texture
+/// (texture)~
+return wdt_load_texture(argument0);
+
 #define wdt_get_texture_status
 /// (texture)->
 if (global.__wdt_native) return wdt_status_ready;
 
 var _texture = argument0;
 if (wdt_is_null(_texture)) return wdt_status_ready;
+
+var _autoload = wdt_autoload_enable(false);
 var _status = global.__wdt_status[?wdt_get_image_path(_texture)];
+wdt_autoload_enable(_autoload);
 return _status != undefined ? _status : wdt_status_fallback;
 
 #define wdt_assign_all
 /// (tx, ntx)~
 if (global.__wdt_native) return 0;
 var _tx = argument0, _ntx = argument1;
+var _autoload = wdt_autoload_enable(false);
 var _img = wdt_get_image(_tx);
 var n, _found = 0;
 
@@ -163,5 +177,40 @@ for (var i = 0; i < n; i++) {
 }
 
 wdt_assign_raw(_tx, _ntx);
+wdt_autoload_enable(_autoload);
+return _found;
 
+#define wdt_autoload_textures
+/// ()
+var n, _found = 0;
+var _autoload = wdt_autoload_enable(false);
+
+var _sprites = global.__wdt_base_sprites;
+n = array_length(_sprites);
+for (var i = 0; i < n; i++) {
+	var _sprite = _sprites[i];
+	var _number = wdt_get_sprite_texture_number(_sprite);
+	for (var k = 0; k < _number; k++) {
+		var _itx = sprite_get_texture(_sprite, k);
+		_found += wdt_autoload_texture(_itx);
+	}
+}
+
+var _fonts = global.__wdt_base_fonts;
+n = array_length(_fonts);
+for (var i = 0; i < n; i++) {
+	var _font = _fonts[i];
+	var _ftx = font_get_texture(_font);
+	_found += wdt_autoload_texture(_ftx);
+}
+
+var _tilesets = global.__wdt_base_tilesets;
+n = array_length(_tilesets);
+for (var i = 0; i < n; i++) {
+	var _tileset = _tilesets[i];
+	var _ftx = tileset_get_texture(_tileset);
+	_found += wdt_autoload_texture(_ftx);
+}
+
+wdt_autoload_enable(_autoload);
 return _found;

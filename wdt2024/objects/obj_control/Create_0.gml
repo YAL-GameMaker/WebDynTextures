@@ -24,3 +24,6 @@ test_group = function(_label, _group) /*=>*/ {
 		wdt_load_texture_group(_group);
 	}
 }
+
+//wdt_autoload_textures();
+//wdt_autoload_texture(sprite_get_texture(spr_background, 0));

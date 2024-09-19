@@ -6,11 +6,21 @@
 ```set navmenu 1```
 ```setmd intro
 This is a "cheat sheet" for the "Web Dynamic Textures" extension by YellowAfterlife.
-
+```
+<!--
 The extension can be found on [itch.io](https://yellowafterlife.itch.io/gamemaker-web-dyn-textures).
 
 The source code can be found on [GitHub](https://github.com/YAL-GameMaker/WebDynTextures).
-```
+-->
+#[Concepts]() {
+	The post-build script makes copies of generated texture pages and replaces them
+	with fallback pages (such as blank images, silhouettes, or lossy images).
+	
+	The extension allows you to load your original texture pages when desired
+	and replaces them on spot.
+	
+	This enables the game to load faster and load the textures when they are needed.
+}
 #[Getting started]() {
 	##{
 	-	Install [Neko VM](https://nekovm.org/download/) so that it's in your PATH.
@@ -66,6 +76,39 @@ The source code can be found on [GitHub](https://github.com/YAL-GameMaker/WebDyn
 	#[wdt_load_texture(texture)->]() {
 		Loads a texture page associated with the given texture page entry
 		(such as from `sprite_get_texture`).
+	}
+}
+#[Automatic loading](wdt_autoload) {
+	You can have textures loaded automatically when they are being accessed!
+	
+	It's a good idea to have the textures loaded by the time user will see them,
+	but these offer a fail-safe in case you never load something.
+	
+	*Note:* for implementation reasons, `_get_texture` calls count as "accessing the texture".
+	You can use [wdt_autoload_enable] to perform texture manipulations without loading them.
+	
+	#[wdt_autoload_texture(texture)->]() {
+		Automatically loads the the texture associated with a texture page entry when it is being accessed.
+	}
+	#[wdt_autoload_textures()->]() {
+		Automatically loads all sprite/font/tileset textures when they are being acessed.
+	}
+	#[wdt_autoload_enable(?enable)->]() {
+		Enables/disables automatic loading for marked textures.
+		
+		Returns the previous state.
+		
+		If `enable` is not passed in or is `undefined`,
+		just returns the current state.
+		
+		For example, if you need to grab an auto-loaded sprite's texture without loading it,
+		you could do
+		```
+		var _autoload = wdt_autoload_enable(false);
+		var _texture = sprite_get_texture(sprite, subimg);
+		wdt_autoload_enable(_autoload); // restore previous state
+		// do something with _texture
+		```
 	}
 }
 #[Status](wdt_status) {

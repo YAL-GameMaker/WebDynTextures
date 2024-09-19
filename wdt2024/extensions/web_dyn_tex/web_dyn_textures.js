@@ -78,6 +78,59 @@ function wdt_assign(tx, ntx) {
 	}
 	return 1;
 }
+var wdt_can_autoload = true;
+/// (?enable)->
+function wdt_autoload_enable(enable) {
+	var _curr = wdt_can_autoload;
+	if (enable == null) return _curr;
+	wdt_can_autoload = enable;
+	return _curr;
+}
+/// (texture)
+function wdt_autoload_texture(tx) {
+	if (tx == null) return 0;
+	
+	var cur_image = wdt_get_image(tx);
+	if (cur_image == null) return 0;
+	
+	for (var fd in tx) {
+		if (!tx.hasOwnProperty(fd)) continue;
+		
+		var sub = tx[fd];
+		if (sub == cur_image) continue; // the image itself
+		if (sub.__wdt_first != null) continue; // already hooked
+		
+		for (var sub_fd in sub) {
+			if (!sub.hasOwnProperty(sub_fd)) continue;
+			
+			var val = sub[sub_fd];
+			if (val == cur_image) {
+				sub.__wdt_first = true;
+				sub.__wdt_image = cur_image;
+				sub.__wdt_texture = tx;
+				delete sub[sub_fd];
+				Object.defineProperty(sub, sub_fd, {
+					get() {
+						if (sub.__wdt_first && wdt_can_autoload) {
+							sub.__wdt_first = false;
+							//var path = wdt_get_image_path(sub.__wdt_texture);
+							//console.log("Auto-loading", path);
+							window.gml_Script_gmcallback_wdt_load_texture(null, null, sub.__wdt_texture);
+						}
+						return sub.__wdt_image;
+					},
+					set(newImage) {
+						sub.__wdt_image = newImage;
+					},
+					enumerable: true,
+					configurable: true,
+				});
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
 
 var wdt_raw_textures = null;
 ///~

@@ -447,11 +447,7 @@ pre.gmlmd a.sf, #doc pre a.sv {
 <div class="main-center">
 <main class="page">
 <section class="intro">
-<p>This is a "cheat sheet" for the "Web Dynamic Textures" extension by YellowAfterlife.
-</p><p>
-The extension can be found on <a href="https://yellowafterlife.itch.io/gamemaker-web-dyn-textures">itch.io</a>.
-</p><p>
-The source code can be found on <a href="https://github.com/YAL-GameMaker/WebDynTextures">GitHub</a>.</p>
+This is a "cheat sheet" for the "Web Dynamic Textures" extension by YellowAfterlife.
 </section>
 <section class="display-controls">
 Click on sections to expand/collapse them.<br>Quick display controls:
@@ -476,7 +472,16 @@ Click on sections to expand/collapse them.<br>Quick display controls:
 
 
 
-</p><section><header id="Getting-started"><a href="#Getting-started" title="(permalink)">Getting started</a></header><article><ol>
+
+</p><section><header id="Concepts"><a href="#Concepts" title="(permalink)">Concepts</a></header><article><p>
+	The post-build script makes copies of generated texture pages and replaces them
+	with fallback pages (such as blank images, silhouettes, or lossy images).
+	</p><p>
+	The extension allows you to load your original texture pages when desired
+	and replaces them on spot.
+	</p><p>
+	This enables the game to load faster and load the textures when they are needed.
+</p></article></section><section><header id="Getting-started"><a href="#Getting-started" title="(permalink)">Getting started</a></header><article><ol>
 	<li>	Install <a href="https://nekovm.org/download/">Neko VM</a> so that it's in your PATH.
 	</li><li>	Install <a href="https://imagemagick.org/">ImageMagick</a> so that it's in your PATH.
 	</li><li>	Import the extension by dragging YYMPS onto your workspace
@@ -520,7 +525,34 @@ Click on sections to expand/collapse them.<br>Quick display controls:
 	</p></article></section><section><header id="wdt_load_texture"><a href="#wdt_load_texture" title="(permalink)">wdt_load_texture(texture)&#8203;<span class="ret-arrow">&#10140;</span></a></header><article><p>
 		Loads a texture page associated with the given texture page entry
 		(such as from <code>sprite_get_texture</code>).
-	</p></article></section></article></section><section><header id="wdt_status"><a href="#wdt_status" title="(permalink)">Status</a></header><article><a class="sticky-side" href="#wdt_status" title="Status"><span>Status</span></a><section><header>Status codes</header><article><section><header id="wdt_status_ready"><a href="#wdt_status_ready" title="(permalink)">wdt_status_ready = 1</a></header><article><p>
+	</p></article></section></article></section><section><header id="wdt_autoload"><a href="#wdt_autoload" title="(permalink)">Automatic loading</a></header><article><a class="sticky-side" href="#wdt_autoload" title="Automatic loading"><span>Automatic loading</span></a><p>
+	You can have textures loaded automatically when they are being accessed!
+	</p><p>
+	It's a good idea to have the textures loaded by the time user will see them,
+	but these offer a fail-safe in case you never load something.
+	</p><p>
+	<strong>Note:</strong> for implementation reasons, <code>_get_texture</code> calls count as "accessing the texture".
+	You can use <a href="#wdt_autoload_enable">wdt_autoload_enable</a> to perform texture manipulations without loading them.
+	</p><section><header id="wdt_autoload_texture"><a href="#wdt_autoload_texture" title="(permalink)">wdt_autoload_texture(texture)&#8203;<span class="ret-arrow">&#10140;</span></a></header><article><p>
+		Automatically loads the the texture associated with a texture page entry when it is being accessed.
+	</p></article></section><section><header id="wdt_autoload_textures"><a href="#wdt_autoload_textures" title="(permalink)">wdt_autoload_textures()&#8203;<span class="ret-arrow">&#10140;</span></a></header><article><p>
+		Automatically loads all sprite/font/tileset textures when they are being acessed.
+	</p></article></section><section><header id="wdt_autoload_enable"><a href="#wdt_autoload_enable" title="(permalink)">wdt_autoload_enable(?enable)&#8203;<span class="ret-arrow">&#10140;</span></a></header><article><p>
+		Enables/disables automatic loading for marked textures.
+		</p><p>
+		Returns the previous state.
+		</p><p>
+		If <code>enable</code> is not passed in or is <code>undefined</code>,
+		just returns the current state.
+		</p><p>
+		For example, if you need to grab an auto-loaded sprite's texture without loading it,
+		you could do
+		</p><pre class="gmlmd">
+<span class="kw">var</span> <span class="lv">_autoload</span> <span class="op">=</span> <a class="sf" href="#wdt_autoload_enable">wdt_autoload_enable</a><span class="op">(</span><span class="sv">false</span><span class="op">)</span><span class="op">;</span>
+<span class="kw">var</span> <span class="lv">_texture</span> <span class="op">=</span> <span class="sf">sprite_get_texture</span><span class="op">(</span><span class="uv">sprite</span><span class="op">,</span> <span class="uv">subimg</span><span class="op">)</span><span class="op">;</span>
+<a class="sf" href="#wdt_autoload_enable">wdt_autoload_enable</a><span class="op">(</span><span class="lv">_autoload</span><span class="op">)</span><span class="op">;</span> <span class="co">// restore previous state</span>
+<span class="co">// do something with _texture</span>
+</pre></article></section></article></section><section><header id="wdt_status"><a href="#wdt_status" title="(permalink)">Status</a></header><article><a class="sticky-side" href="#wdt_status" title="Status"><span>Status</span></a><section><header>Status codes</header><article><section><header id="wdt_status_ready"><a href="#wdt_status_ready" title="(permalink)">wdt_status_ready = 1</a></header><article><p>
 			This is <code>1</code> so that you can do <code>if (status)</code> to see if a thing is ready to use.
 		</p></article></section><section><header id="wdt_status_loading"><a href="#wdt_status_loading" title="(permalink)">wdt_status_loading = 0</a></header><article><p>
 			Currently loading the original texture page!
@@ -558,7 +590,7 @@ Click on sections to expand/collapse them.<br>Quick display controls:
 	</p></article></section></article></section></p><!--doc>-->
 </section>
 </div>
-<!--<navmenu--><nav class="navmenu"><ul><li><a href="#Getting-started">Getting started</a><ul></ul></li><li><a href="#General-functions">General functions</a><ul><li><a href="#wdt_async_image">wdt_async_image()</a><ul></ul></li></ul></li><li><a href="#wdt_load">Loading</a><ul><li><a href="#wdt_load_sprite">wdt_load_sprite(sprite, ?subimg)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_sprites">wdt_load_sprites(...sprites)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_font">wdt_load_font(font)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_tileset">wdt_load_tileset(font)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_texture_group">wdt_load_texture_group(texture_group_name)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_texture">wdt_load_texture(texture)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li></ul></li><li><a href="#wdt_status">Status</a><ul><li>Status codes<ul><li><a href="#wdt_status_ready">wdt_status_ready = 1</a><ul></ul></li><li><a href="#wdt_status_loading">wdt_status_loading = 0</a><ul></ul></li><li><a href="#wdt_status_fallback">wdt_status_fallback = -1</a><ul></ul></li><li><a href="#wdt_status_error">wdt_status_error = -2</a><ul></ul></li></ul></li><li><a href="#wdt_get_status_name">wdt_get_status_name(status)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_sprite_status">wdt_get_sprite_status(sprite, ?subimg)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_font_status">wdt_get_font_status(font)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_tileset_status">wdt_get_tileset_status(tileset)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_texture_group_status">wdt_get_texture_group_status(texture_group_name)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_texture_status">wdt_get_texture_status(texture)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li></ul></li><li><a href="#wdt_misc">Other functions</a><ul><li><a href="#wdt_get_sprite_texture_number">wdt_get_sprite_texture_number(sprite)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li></ul></li></ul></nav><!--navmenu>-->
+<!--<navmenu--><nav class="navmenu"><ul><li><a href="#Concepts">Concepts</a><ul></ul></li><li><a href="#Getting-started">Getting started</a><ul></ul></li><li><a href="#General-functions">General functions</a><ul><li><a href="#wdt_async_image">wdt_async_image()</a><ul></ul></li></ul></li><li><a href="#wdt_load">Loading</a><ul><li><a href="#wdt_load_sprite">wdt_load_sprite(sprite, ?subimg)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_sprites">wdt_load_sprites(...sprites)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_font">wdt_load_font(font)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_tileset">wdt_load_tileset(font)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_texture_group">wdt_load_texture_group(texture_group_name)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_load_texture">wdt_load_texture(texture)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li></ul></li><li><a href="#wdt_autoload">Automatic loading</a><ul><li><a href="#wdt_autoload_texture">wdt_autoload_texture(texture)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_autoload_textures">wdt_autoload_textures()&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_autoload_enable">wdt_autoload_enable(?enable)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li></ul></li><li><a href="#wdt_status">Status</a><ul><li>Status codes<ul><li><a href="#wdt_status_ready">wdt_status_ready = 1</a><ul></ul></li><li><a href="#wdt_status_loading">wdt_status_loading = 0</a><ul></ul></li><li><a href="#wdt_status_fallback">wdt_status_fallback = -1</a><ul></ul></li><li><a href="#wdt_status_error">wdt_status_error = -2</a><ul></ul></li></ul></li><li><a href="#wdt_get_status_name">wdt_get_status_name(status)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_sprite_status">wdt_get_sprite_status(sprite, ?subimg)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_font_status">wdt_get_font_status(font)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_tileset_status">wdt_get_tileset_status(tileset)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_texture_group_status">wdt_get_texture_group_status(texture_group_name)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li><li><a href="#wdt_get_texture_status">wdt_get_texture_status(texture)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li></ul></li><li><a href="#wdt_misc">Other functions</a><ul><li><a href="#wdt_get_sprite_texture_number">wdt_get_sprite_texture_number(sprite)&#8203;<span class="ret-arrow">&#10140;</span></a><ul></ul></li></ul></li></ul></nav><!--navmenu>-->
 </main></div>
 <script type="text/javascript">(function() {
 	var doc, headers;
