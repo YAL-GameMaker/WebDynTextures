@@ -3,6 +3,23 @@ function wdt_change_ext(path, newext) {
 	return path.replace(/\.[^\\/.]+$/, "") + newext;
 }
 ///~
+function wdt_load_texture_raw(tx, path) {
+	var img = document.createElement("img");
+	var ntx = { WebGLTexture: img };
+	img.onload = function(e) {
+		window.gml_Script_gmcallback_wdt_async_image(null, null, tx, ntx, 1);
+	};
+	img.onerror = function(e) {
+		window.gml_Script_gmcallback_wdt_async_image(null, null, tx, ntx, -1);
+	};
+	img.src = path;
+}
+///~
+function wdt_is_null(val) {
+	// thank you, GM LTS, very cool
+	return val == null;
+}
+///~
 function wdt_get_image_field(tx) {
 	if (tx == null) return null;
 	
@@ -22,12 +39,12 @@ function wdt_get_image_field(tx) {
 /// ->wdt_image
 function wdt_get_image(tx) {
 	var fd = wdt_get_image_field(tx);
-	return fd ? tx[fd] : null;
+	return fd ? tx[fd] : undefined;
 }
 /// ->string
 function wdt_get_image_path(tx) {
 	var img = wdt_get_image(tx);
-	return img ? img.src : "";
+	return img ? img.src : undefined;
 }
 ///~
 function wdt_assign(tx, ntx) {

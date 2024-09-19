@@ -24,4 +24,3 @@ test_group = function(_label, _group) /*=>*/ {
 		wdt_load_texture_group(_group);
 	}
 }
-show_debug_message(texturegroup_get_textures("Default"));

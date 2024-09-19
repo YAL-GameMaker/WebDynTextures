@@ -1,12 +1,10 @@
 # Web Dynamic Textures
 
 **Quick links:** [documentation](https://yal.cc/docs/gm/web-dyn-textures)  
-**Versions:** GM2022+ (except LTS, where `sprite_add` is broken..?)  
-**Platforms:** HTML5
+**Versions:** GM2022+ (see Known Issues for notes on LTS)
+**Platforms:** HTML5 (has fallbacks for other platforms)
 
 A dynamic texture page loading system for HTML5 games in GameMaker!
-
-
 
 ## Historical context
 
@@ -20,7 +18,7 @@ so no one else was asking me about it for a while and eventually I kind of forgo
 
 Fast-forward to September 2024,
 I'm digging through my "old projects" folder,
-look at the extension and think "hm, this could be useful for _at least one_ project I know of".
+look at the extension and think "hm, this could be useful for _at least_ one project I know of".
 
 As expected, the test project doesn't even boot when imported into GM2024, but that's a fixable oversight.
 
@@ -39,16 +37,23 @@ if they're using the one that we want to replace.
 
 ---
 
-But that's not all! Sometimes (e.g. for Spine), GameMaker references textures by ID inside the `g_Textures` array.
+But that's not all! Sometimes (e.g. for Spine),
+GameMaker references textures by ID inside the `g_Textures` array.
 
 I could not come up with a better solution to this than retrieving the array
 by running regular expressions on `func.toString()` of a few built-in functions.
 Should this part fail, the extension will still work for most use cases (and first version didn't do this at all).
 
 ## _Doesn't GM have dynamic texture groups now?_
+
 Generally yes, but not on HTML5 (for now?)
 
 But also the out-of-box implementation will likely use a fixed fallback texture rather than adjustable options like I have it here.
+
+## Known issues
+
+In LTS2022, Spine sprites are given personal texture pages and `sprite_get_texture` returns `null`
+for them, meaning that extension cannot update them. This will likely be fixed in LTS2025.
 
 ## Meta
 

@@ -4,9 +4,30 @@ global.__wdt_native = os_browser == browser_not_a_browser;
 global.__wdt_status = ds_map_create(); /// @is {ds_map<string, int>}
 global.__wdt_async = ds_map_create(); /// @is {ds_map<sprite, texture>}
 global.__wdt_sprite_number = ds_map_create(); /// @is {ds_map<sprite, int>}
-global.__wdt_base_sprites = asset_get_ids(asset_sprite);
-global.__wdt_base_fonts = asset_get_ids(asset_font);
-global.__wdt_base_tilesets = asset_get_ids(asset_tiles);
+try {
+	global.__wdt_base_sprites = asset_get_ids(asset_sprite);
+	global.__wdt_base_fonts = asset_get_ids(asset_font);
+	global.__wdt_base_tilesets = asset_get_ids(asset_tiles);
+} catch (_) {
+	var n = 0;
+	while (sprite_exists(n)) n += 1;
+	global.__wdt_base_sprites = array_create(n);
+	for (var i = 0; i < n; i++) global.__wdt_base_sprites[i] = i;
+	//
+	n = 0;
+	while (font_exists(n)) n += 1;
+	global.__wdt_base_fonts = array_create(n);
+	for (var i = 0; i < n; i++) global.__wdt_base_fonts[i] = i;
+	//
+	n = 0;
+	while (n < 0x8000) {
+		var _name = tileset_get_name(n);
+		if (_name == "<undefined>") break;
+		n += 1;
+	}
+	global.__wdt_base_tilesets = array_create(n);
+	for (var i = 0; i < n; i++) global.__wdt_base_tilesets[i] = i;
+}
 global.__wdt_texture_group_image_pairs = ds_map_create(); /// @is {ds_map<string, array<[string, texture]>>}
 global.__wdt_texture_group_temp = ds_map_create(); /// @is {ds_map<string, bool>}
 //#macro wdt_status_ready 1
@@ -52,6 +73,19 @@ if (_texture != undefined) {
 	wdt_assign_all(_texture, _new_texture);
 }
 
+#define gmcallback_wdt_async_image
+var _texture = argument0, _new_texture = argument1, _status = argument2;
+var _path = wdt_get_image_path(_texture);
+if (_status < 0) {
+	global.__wdt_status[?_path] = -1;
+	exit;
+}
+var _new_path = wdt_get_image_path(_new_texture);
+global.__wdt_status[?_path] = 1;
+global.__wdt_status[?_new_path] = 1;
+
+wdt_assign_all(_texture, _new_texture);
+
 #define wdt_load_texture
 /// (texture)->
 if (global.__wdt_native) return false;
@@ -69,8 +103,12 @@ if (_status != undefined) return false;
 var _new_path = wdt_change_ext(_path, ".orig.png");
 show_debug_message("[wdt] Loading " + _new_path);
 
-var _sprite = sprite_add(_new_path, 1, false, false, 0, 0);
-global.__wdt_async[?_sprite] = _texture;
+if (true) {
+	wdt_load_texture_raw(_texture, _new_path);
+} else {
+	var _sprite = sprite_add(_new_path, 1, false, false, 0, 0);
+	global.__wdt_async[?_sprite] = _texture;
+}
 global.__wdt_status[?_path] = 0;
 
 return true;
@@ -80,6 +118,7 @@ return true;
 if (global.__wdt_native) return wdt_status_ready;
 
 var _texture = argument0;
+if (wdt_is_null(_texture)) return wdt_status_ready;
 var _status = global.__wdt_status[?wdt_get_image_path(_texture)];
 return _status != undefined ? _status : wdt_status_fallback;
 

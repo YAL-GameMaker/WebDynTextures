@@ -1,5 +1,6 @@
 package;
 
+import sys.io.Process;
 import haxe.io.Path;
 import sys.io.File;
 import sys.FileSystem;
@@ -33,6 +34,7 @@ class PostBuildStep {
 		//
 		var fallback_mode = extOpt("fallback_mode", "Black");
 		Sys.println("[wdt] Fallback mode is " + fallback_mode);
+		Sys.println('[wdt] Output folder is "$html5game"');
 		//
 		var solid_hue = extOptNum("solid_hue", 0);
 		var solid_hue_step = extOptNum("solid_hue_step", 0);
@@ -46,13 +48,56 @@ class PostBuildStep {
 		var lossy_color_quality = extOpt("lossy_color_quality", "10");
 		var lossy_alpha_quality = extOpt("lossy_alpha_quality", "10");
 		//
+		var programDir = Path.directory(Sys.programPath());
+		var fallbackPNG = Path.join([programDir, "fallbacktexture.png"]);
+		var fallbackRGB = Path.withExtension(fallbackPNG, "rgb");
+		if (!FileSystem.exists(fallbackRGB)) {
+			Sys.command("magick", [fallbackPNG, fallbackRGB]);
+		}
+		var fallbackBytes = File.getBytes(fallbackRGB);
+		//
 		for (rel in FileSystem.readDirectory(html5game)) {
 			if (!rel.endsWith(".png")) continue;
 			if (rel.endsWith(".orig.png")) continue;
 			if (!rel.contains("_texture_")) continue;
-			if (rel == defTexture) continue;
 			
 			var full = html5game + "/" + rel;
+			
+			// is this the default texture? We don't want to compress that one... probably
+			var skip = false;
+			do {
+				// first, it should be 64x64
+				var sizePrefix = "size!!";
+				var checkSize = new Process("magick", [
+					"identify",
+					"-ping",
+					"-format", sizePrefix + "%[width];%[height]",
+					full,
+				]);
+				if (checkSize.exitCode() != 0) continue;
+				var sizeLine = checkSize.stdout.readLine();
+				if (!sizeLine.startsWith(sizePrefix)) break;
+				var sizePair = sizeLine.substr(sizePrefix.length).split(';');
+				if (sizePair.length != 2) break;
+				var width = Std.parseInt(sizePair[0]);
+				if (width == null) break;
+				var height = Std.parseInt(sizePair[1]);
+				if (height == null) break;
+				if (width != 64 || height != 64) break;
+				//
+				var fullRGB = Path.withExtension(full, "rgb");
+				Sys.command("magick", [
+					full,
+					fullRGB,
+				]);
+				var fullBytes = File.getBytes(fullRGB);
+				skip = fallbackBytes.compare(fullBytes) == 0;
+			} while (false);
+			if (skip) {
+				Sys.println('[wdt] Skipping "$rel", that\'s the fallback texture');
+				continue;
+			}
+			
 			var szOrig = FileSystem.stat(full).size;
 			var orig = Path.withExtension(full, "orig.png");
 			File.copy(full, orig);
@@ -112,7 +157,7 @@ class PostBuildStep {
 			}
 			var szFB = FileSystem.stat(full).size;
 			var szPerc = Math.floor(szFB / szOrig * 1000) / 10 + "%";
-			Sys.println('[wdt] Replaced $rel, '
+			Sys.println('[wdt] Replaced "$rel", '
 				+ '${printSize(szOrig)} -> ${printSize(szFB)}'
 				+ ' ($szPerc of original)');
 		} // for

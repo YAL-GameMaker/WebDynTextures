@@ -1,5 +1,7 @@
 {
-  "$GMExtensionConfigSet": "GMExtensionConfigSet",
+  "extensionId": null,
+  "resourceVersion": "1.0",
+  "resourceType": "GMExtensionConfigSet",
   "configurables": {
     "48a65c99-e602-42de-9692-71a2015114c6": {
       "Default": {
