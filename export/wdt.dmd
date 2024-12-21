@@ -21,7 +21,7 @@ The source code can be found on [GitHub](https://github.com/YAL-GameMaker/WebDyn
 	
 	This enables the game to load faster and load the textures when they are needed.
 }
-#[Getting started]() {
+#[Getting started](setup) {
 	##{
 	-	Install [Neko VM](https://nekovm.org/download/) so that it's in your PATH.
 	-	Install [ImageMagick](https://imagemagick.org/) so that it's in your PATH.
@@ -40,7 +40,14 @@ The source code can be found on [GitHub](https://github.com/YAL-GameMaker/WebDyn
 		These are slightly larger than Silhouette, but produce a fairly
 		legible image when not loaded, making them a great choice for loading
 		textures in background.
+	-	Add
+		```
+		wdt_async_image();
+		```
+		to an Async - Image event in a persistent object.
 	-	[Load textures](wdt_load) when you need them!
+	
+		Or [auto-load them](wdt_autoload) if you're not sure.
 		
 		You can use [status functions](wdt_status) to check on the progress.
 	}
