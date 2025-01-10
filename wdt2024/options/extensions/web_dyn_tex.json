@@ -20,6 +20,13 @@
     "9f85c68b-8511-4ebd-8800-bc26b7b1a328": null,
     "161598f1-7e4b-4206-9900-744b868548f4": null,
     "e5959387-fdf6-43fe-80cd-b8eb39d75264": {},
-    "a9643f3b-a726-4e01-90ac-82fe3bc8087d": null
+    "a9643f3b-a726-4e01-90ac-82fe3bc8087d": null,
+    "f4933aaf-438d-4624-8372-0cf5c7b92e5b": null,
+    "a05bf499-41be-435b-b758-bd1375811b98": null,
+    "a4f10ce7-19a8-481f-a0dd-57005f4b35ca": {
+      "Default": {
+        "value": "magick"
+      }
+    }
   }
 }

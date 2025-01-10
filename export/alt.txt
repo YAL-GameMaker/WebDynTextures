@@ -1,0 +1,17 @@
+I made a new GameMaker extension! It replaces the textures in web builds by "fallbacks" (empty, silhouettes, or just lossy) and then you can load the "real" textures when you need them. This can speed up the initial loading time by a lot!
+
+https://yellowafterlife.itch.io/gamemaker-web-dyn-textures
+
+---
+
+For example, here I have compressed the textures to 1/30 (!) of their original size, but they are still presentable enough that you could look at them for a few seconds while the original textures load.
+
+A screenshot of the test project with fallback textures. Everything looks slightly lossy (being a 10% quality WEBP)
+A screenshot of the test project with original textures.
+A screenshot of textures in Explorer showing size reduction.
+
+---
+
+You might find this particularly useful if you are making games for platforms with harsh "initial load time/size" requirements OR if your game is pretty big, but it's an all-around convenience.
+
+And it's free & open-source too!

@@ -29,8 +29,12 @@ class PostBuildStep {
 			return;
 		}
 		//
+		var magickPath = extOpt("magick", "magick");
+		function runMagick(args) {
+			Sys.command(magickPath, args);
+		}
+		//
 		var html5game = env["YYoutputFolder"] + "/html5game";
-		var defTexture = env["YYprojectName"] + "_texture_0.png";
 		//
 		var fallback_mode = extOpt("fallback_mode", "Black");
 		Sys.println("[wdt] Fallback mode is " + fallback_mode);
@@ -52,7 +56,7 @@ class PostBuildStep {
 		var fallbackPNG = Path.join([programDir, "fallbacktexture.png"]);
 		var fallbackRGB = Path.withExtension(fallbackPNG, "rgb");
 		if (!FileSystem.exists(fallbackRGB)) {
-			Sys.command("magick", [fallbackPNG, fallbackRGB]);
+			runMagick([fallbackPNG, fallbackRGB]);
 		}
 		var fallbackBytes = File.getBytes(fallbackRGB);
 		//
@@ -86,7 +90,7 @@ class PostBuildStep {
 				if (width != 64 || height != 64) break;
 				//
 				var fullRGB = Path.withExtension(full, "rgb");
-				Sys.command("magick", [
+				runMagick([
 					full,
 					fullRGB,
 				]);
@@ -104,7 +108,7 @@ class PostBuildStep {
 			
 			switch (fallback_mode) {
 				case "Solid color": {
-					Sys.command("magick", [
+					runMagick([
 						full,
 						"-size", "%wx%h",
 						'canvas:hsv($solid_hue,$solid_saturation%,$solid_value%)',
@@ -115,7 +119,7 @@ class PostBuildStep {
 				};
 				case "Transparent": {
 					// combine with black, then wipe alpha
-					Sys.command("magick", [
+					runMagick([
 						full,
 						"-size", "%wx%h",
 						"canvas:black",
@@ -125,7 +129,7 @@ class PostBuildStep {
 					]);
 				};
 				case "Silhouette": {
-					Sys.command("magick", [
+					runMagick([
 						full,
 						"xc:" + silhouette_color,
 						"-channel", "RGB",
@@ -138,7 +142,7 @@ class PostBuildStep {
 					]);
 				};
 				case "Lossy WEBP": {
-					Sys.command("magick", [
+					runMagick([
 						full,
 						"-quality", lossy_color_quality,
 						"-define", "webp:alpha-quality=" + lossy_alpha_quality,
