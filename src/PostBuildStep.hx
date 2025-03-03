@@ -13,6 +13,8 @@ class PostBuildStep {
 			Sys.println("[wdt] This isn't web! Bye!");
 			return;
 		}
+		//for (key => val in env) trace(key, val);
+		//
 		var extName = "web_dyn_tex";
 		function extOpt(name, defValue:String):String {
 			return env['YYEXTOPT_${extName}_$name'] ?? defValue;
@@ -34,7 +36,7 @@ class PostBuildStep {
 			Sys.command(magickPath, args);
 		}
 		//
-		var html5game = env["YYoutputFolder"] + "/html5game";
+		var html5game = env["YYoutputFolder"] + "/" + env["YYPLATFORM_option_html5_foldername"];
 		//
 		var fallback_mode = extOpt("fallback_mode", "Black");
 		Sys.println("[wdt] Fallback mode is " + fallback_mode);
